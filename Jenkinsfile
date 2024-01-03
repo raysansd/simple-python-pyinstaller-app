@@ -35,12 +35,10 @@ node {
             def IMAGE = 'cdrx/pyinstaller-linux:python2'
 
             dir("${env.BUILD_ID}") {
-                unstash(name: 'compiled-results')
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
             }
         } catch (Exception e) {
             echo "Deliver failed: ${e.getMessage()}"
-            currentBuild.result = 'FAILURE'
         } finally {
             success {
                 archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
