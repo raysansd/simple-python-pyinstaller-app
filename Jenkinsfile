@@ -1,4 +1,5 @@
 node {
+    withCredentials([string(credentialsId: 'yZWTnwCb58z8ci5XXByJiTPI', variable: 'VERCEL_CREDENTIALS')]) {
     stage('Build') {
         try {
             docker.image('python:2-alpine').inside {
@@ -37,12 +38,13 @@ node {
             dir("${env.BUILD_ID}") {
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
             }
-	    archiveArtifacts "sources/dist/add2vals"
-            sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+	    sh "sleep 60"
+	    sh "vercel --prod --token ${VERCEL_CREDENTIALS}"
         } catch (Exception e) {
             echo "Deliver failed"
         }       
     }
+  }
 }
 
 
