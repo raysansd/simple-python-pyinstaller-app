@@ -17,6 +17,7 @@ node {
             junit 'test-reports/results.xml'
         } catch (Exception e) {
             echo "Test failed"
+        }
     }
 
     stage('Manual Approval') {
@@ -44,8 +45,6 @@ node {
             success {
                 archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
-		sh "pwd"
-		sh "sleep 60"
             }
         }
     }
