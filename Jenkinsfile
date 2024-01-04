@@ -30,16 +30,13 @@ node {
         }
     }
 
-    stage('Deliver') {
+    stage('Deliver to ') {
         try {
-            env.VOLUME = "${pwd()}/sources:/src"
-            env.IMAGE = 'cdrx/pyinstaller-linux:python2'
-
-            dir("${env.BUILD_ID}") {
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+	   // Use Docker to run Vercel CLI commands
+            docker.image('vercel/vercel:latest').inside {
+                // Deploy to Vercel
+                sh 'vercel --prod --token ${VERCEL_CREDENTIALS}' // Use appropriate Vercel CLI commands and options for your deployment
             }
-	    sh "sleep 60"
-	    sh "vercel --prod --token ${VERCEL_CREDENTIALS}"
         } catch (Exception e) {
             echo "Deliver failed"
         }       
