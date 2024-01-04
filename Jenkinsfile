@@ -1,5 +1,4 @@
 node {
-    withCredentials([string(credentialsId: 'yZWTnwCb58z8ci5XXByJiTPI', variable: 'VERCEL_CREDENTIALS')]) {
     stage('Build') {
         try {
             docker.image('python:2-alpine').inside {
@@ -30,18 +29,23 @@ node {
         }
     }
 
-    stage('Deliver to ') {
+    stage('Deliver') {
         try {
-	   // Use Docker to run Vercel CLI commands
-            docker.image('vercel/vercel:latest').inside {
-                // Deploy to Vercel
-                sh 'vercel --prod --token ${VERCEL_CREDENTIALS}' // Use appropriate Vercel CLI commands and options for your deployment
+            env.VOLUME = "${pwd()}/sources:/src"
+            env.IMAGE = 'cdrx/pyinstaller-linux:python2'
+
+            dir("${env.BUILD_ID}") {
+                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
             }
+	    archiveArtifacts "sources/dist/add2vals"
+	    sh "ls sources/dist"
+	    sh "sleep 60"
+	    sh "ssh root@192.168.1.13 cp -r sources/dist/add2vals /root/"
+            sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
         } catch (Exception e) {
             echo "Deliver failed"
         }       
     }
-  }
 }
 
 
