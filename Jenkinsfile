@@ -22,7 +22,7 @@ node {
 
     stage('Manual Approval') {
         try {
-            input message: 'Lanjutkan ke tahap Deploy??'
+            input message: 'Lanjutkan ke tahap Deploy ?'
         } catch (err) {
             echo "Pipeline aborted"
             
