@@ -35,7 +35,7 @@ node {
         try {
             env.VOLUME = "${pwd()}/sources:/src"
             env.IMAGE = 'cdrx/pyinstaller-linux:python2'
-	    def cred = credentials('your-credential-id')
+	    def cred = credentials('202401050001')
             def username = cred.username
 	    def password = cred.password
 
