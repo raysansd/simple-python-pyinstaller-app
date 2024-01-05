@@ -35,6 +35,9 @@ node {
         try {
             env.VOLUME = "${pwd()}/sources:/src"
             env.IMAGE = 'cdrx/pyinstaller-linux:python2'
+	    def cred = credentials('your-credential-id')
+            def username = cred.username
+	    def password = cred.password
 
             dir("${env.BUILD_ID}") {
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
@@ -42,7 +45,7 @@ node {
 	    archiveArtifacts "sources/dist/add2vals"
 	    sh "ls sources/dist"
 	    sh "sleep 60"
-	    sh "ssh root@192.168.1.13 cp -r sources/dist/add2vals /root/"
+	    sh "sshpass -p ${password} ssh ${username}@192.168.1.13 cp -r sources/dist/add2vals /root/"
             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
         } catch (Exception e) {
             echo "Deliver failed"
