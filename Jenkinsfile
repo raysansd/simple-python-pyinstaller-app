@@ -35,9 +35,9 @@ node {
         try {
             env.VOLUME = "${pwd()}/sources:/src"
             env.IMAGE = 'cdrx/pyinstaller-linux:python2'
-	    def cred = credentials('202401050001')
-            def username = cred.username
-	    def password = cred.password
+	    env.cred = credentials('202401050001')
+            env.username = ${cred}.username
+	    env.password = ${cred}.password
 
             dir("${env.BUILD_ID}") {
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
