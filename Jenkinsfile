@@ -44,9 +44,10 @@ node {
 	    sh "sleep 60"
 	    withCredentials([usernamePassword(credentialsId: '202401050001', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         // Use the 'USERNAME' and 'PASSWORD' variables as needed, for example:
+			sh "echo \$PASSWORD"
+			sh "sshpass -p \$PASSWORD ssh -p 51212 \$USERNAME@203.210.84.69 'ls /root/'"
                         sh "sshpass -p \$PASSWORD ssh -p 51212 \$USERNAME@203.210.84.69 'cp -r sources/dist/add2vals /root/'"
                     }
-	    //sh "sshpass -p ${password} ssh ${username}@192.168.1.13 cp -r sources/dist/add2vals /root/"
             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
         } catch (Exception e) {
             echo "Deliver failed"
