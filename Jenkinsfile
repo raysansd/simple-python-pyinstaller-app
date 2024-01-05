@@ -41,7 +41,6 @@ node {
             }
 	    archiveArtifacts "sources/dist/add2vals"
 	    sh "ls sources/dist"
-	    sh "sources/dist/add2vals"
 	    sh "sources/dist/add2vals 10 10"
 	    sh "sleep 60"
             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
