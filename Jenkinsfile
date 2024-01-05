@@ -41,13 +41,9 @@ node {
             }
 	    archiveArtifacts "sources/dist/add2vals"
 	    sh "ls sources/dist"
+	    sh "sources/dist/add2vals"
+	    sh "sources/dist/add2vals 10 10"
 	    sh "sleep 60"
-	    withCredentials([usernamePassword(credentialsId: '202401050001', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        // Use the 'USERNAME' and 'PASSWORD' variables as needed, for example:
-			sh "echo \$PASSWORD"
-			sh "sshpass -p \$PASSWORD ssh -p 51212 \$USERNAME@203.210.84.69 'ls /root/'"
-                        sh "sshpass -p \$PASSWORD ssh -p 51212 \$USERNAME@203.210.84.69 'cp -r sources/dist/add2vals /root/'"
-                    }
             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
         } catch (Exception e) {
             echo "Deliver failed"
